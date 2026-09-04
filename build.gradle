@@ -1,30 +1,30 @@
 plugins {
-  id 'groovy'
-  id 'org.jenkins-ci.jpi' version '0.50.0-rc.3'
-  id 'jacoco'
-  id "com.diffplug.spotless" version "6.20.0"
-  id 'codenarc'
+    id 'groovy'
+    // Stricter Gradle 9 compilation compatibility variant
+    id 'org.jenkins-ci.jpi2' version '0.58.0' 
+    id 'jacoco'
+    id "com.diffplug.spotless" version "6.25.0"
+    id 'codenarc'
 }
 
 repositories {
     mavenCentral()
-    maven {
-        url('https://repo.jenkins-ci.org/public/')
-    }
+    maven { url('https://jenkins-ci.org') }
 }
 
 group = 'org.jenkins-ci.plugins'
-version = '2.5.5'
+version = '2.5.6'
 description = 'Allows users to create tool-agnostic, templated pipelines to be shared by multiple teams'
 
 jenkinsPlugin {
-    jenkinsVersion.set('2.387.3')
+    jenkinsVersion.set('2.580')
     pluginId.set('templating-engine')
     humanReadableName.set('Templating Engine')
-    homePage.set(uri('https://github.com/jenkinsci/templating-engine-plugin'))
+    homePage.set(uri('https://github.com'))
     generateTests.set(true)
     configureRepositories = false
     configurePublishing = true
+    
     developers {
         developer {
             id 'steven-terrana'
@@ -39,9 +39,13 @@ jenkinsPlugin {
     }
 }
 
+// MANDATORY FOR GRADLE 9: Lazy configuration task declaration matching the JUnit Platform lifecycle
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}
+
 dependencies {
-    // plugin dependencies
-    implementation platform('io.jenkins.tools.bom:bom-2.387.x:2278.v47b_4508e256a')
+    implementation platform('io.jenkins.tools.bom:bom-2.580.v4eefbc2985be:')
     implementation 'org.jenkins-ci.plugins.workflow:workflow-multibranch'
     implementation 'org.jenkins-ci.plugins.workflow:workflow-api'
     implementation 'org.jenkins-ci.plugins:branch-api'
@@ -52,30 +56,20 @@ dependencies {
     implementation 'org.jgrapht:jgrapht-core:1.4.0'
     implementation 'org.jenkins-ci.modules:sshd'
 
-    // unit test dependencies
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.4'
-    testImplementation 'net.bytebuddy:byte-buddy:1.10.7' // used by Spock
-    testImplementation 'org.objenesis:objenesis:3.1'     // used by Spock
-    testImplementation(group: 'org.jenkins-ci.plugins', name: 'git', classifier:'tests') {
+    // Gradle 9 safe test runner stack
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.0'        
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0' 
+    testImplementation 'net.bytebuddy:byte-buddy:1.15.1'              
+    testImplementation 'org.objenesis:objenesis:3.4'                  
+    
+    testImplementation(group: 'org.jenkins-ci.plugins', name: 'git', classifier: 'tests') {
         exclude(module: 'httpclient')
         exclude(module: 'annotation-indexer')
     }
 
-    testImplementation(group: "org.jenkins-ci.main", name: "jenkins-test-harness", version: "1837.vb_6efb_1790942")
-
-    // test plugins
-    testImplementation(group: "org.jenkins-ci.plugins.workflow", name: "workflow-support", classifier: "tests")
-    testImplementation(group: "org.jenkins-ci.plugins", name: "scm-api", version: "2.3.0", classifier: "tests")
-    testImplementation(group: 'org.jenkins-ci.plugins', name: 'git', version:'4.7.1') {
-        exclude(module: 'httpclient')
-        exclude(module: 'annotation-indexer')
-    }
-    testImplementation 'org.jenkins-ci.plugins:token-macro'
-    testImplementation 'org.jenkins-ci.plugins:matrix-project'
-    testImplementation 'org.jenkins-ci.plugins.workflow:workflow-aggregator:2.6'
-    testImplementation 'org.jenkins-ci.plugins.workflow:workflow-step-api'
+    testImplementation 'org.jenkins-ci.main:jenkins-test-harness'
 }
+
 
 jacocoTestReport {
     reports {

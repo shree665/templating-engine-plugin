@@ -17,7 +17,7 @@ package org.boozallen.plugins.jte.init.governance.config.dsl
 
 import static PipelineConfigurationBuilder.*
 import java.util.regex.Pattern
-import org.apache.commons.lang.StringEscapeUtils
+import org.apache.commons.text.StringEscapeUtils
 import org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript
 import org.jenkinsci.plugins.workflow.flow.FlowExecutionOwner
 
