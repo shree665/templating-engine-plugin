@@ -17,7 +17,6 @@ package org.boozallen.plugins.jte.init.primitives.injectors
 
 import org.boozallen.plugins.jte.init.governance.config.dsl.TemplateConfigException
 import org.boozallen.plugins.jte.init.primitives.TemplatePrimitive
-
 /**
  * JTE primitive representing an application environment to capture environmental context
  */
@@ -28,7 +27,9 @@ class ApplicationEnvironment extends TemplatePrimitive implements Serializable{
     String name
     String short_name
     String long_name
+    @XstreamSafeObjectField
     def config
+
     ApplicationEnvironment previous
     ApplicationEnvironment next
 

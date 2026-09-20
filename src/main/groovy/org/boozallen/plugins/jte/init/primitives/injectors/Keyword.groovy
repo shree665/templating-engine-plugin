@@ -25,6 +25,7 @@ class Keyword extends TemplatePrimitive{
 
     private static final long serialVersionUID = 1L
     String name
+    @XstreamSafeObjectField
     Object value
 
     @Override String getName(){ return name }
